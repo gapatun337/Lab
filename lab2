@@ -273,5 +273,46 @@ def calculate_product(n):
 n = int(input("Введите значение n: "))
 result = calculate_product(n)
 print("Произведение числовой последовательности:", result)
-    
+
 task7()
+
+
+
+
+
+import math
+def task8():
+ import math
+
+# Вычисление первого выражения
+result1 = 0
+
+for i in range(1, 9):
+    for j in range(1, i+1):
+        term = (j**math.cos(i) + i**math.cos(j))**2
+        result1 += term
+
+# Вычисление второго выражения
+result2 = 1.0
+
+for i in range(1, 6):
+    sub_result = 1.0
+    for j in range(1, i+1):
+        sub_result *= math.sin(j ** math.cos(i))
+    result2 *= sub_result
+
+# Вычисление третьего выражения
+result3 = 1.0
+
+for i in range(1, 9):
+    sub_result = 1.0
+    for j in range(i, 2*i):
+        for k in range(i+j, 2*(i+j)+1):
+            sub_result += (2*math.cos(j) - 3*math.log(i + 0.5*k))
+    result3 *= sub_result
+
+# Вывод результатов
+print("Результат первого выражения:", result1)
+print("Результат второго выражения:", result2)
+print("Результат третьего выражения:", result3)
+task8()
