@@ -46,10 +46,10 @@ task1()
 
 
 
+
 import numpy as np
 import matplotlib.pyplot as plt
-
-def task2():   
+def task2():
  import numpy as np
  import matplotlib.pyplot as plt
 def f(x):
@@ -57,21 +57,22 @@ def f(x):
         return 2 * x**3 - 2
     else:
         return -np.sin(x)
-    def plot_function(a, b):
-        x = np.linspace(a, b, 1000)
-        y = np.vectorize(f)(x)
 
-        plt.plot(x, y)
-        plt.xlabel('x')
-        plt.ylabel('f(x)')
-        plt.title('График функции f(x)')
-        plt.grid(True)
-        plt.show()
+def plot_function(a, b):
+    x = np.linspace(a, b, 1000)
+    y = np.vectorize(f)(x)
 
-    a = float(input("Введите значение a: "))
-    b = float(input("Введите значение b: "))
+    plt.plot(x, y)
+    plt.xlabel('x')
+    plt.ylabel('f(x)')
+    plt.title('График функции f(x)')
+    plt.grid(True)
+    plt.show()
 
-    plot_function(a, b)
+a = float(input("Введите значение a: "))
+b = float(input("Введите значение b: "))
+
+plot_function(a, b)
 
 task2() 
 
@@ -96,7 +97,7 @@ def decimal_in_new_numeral_system(number, base):
 
         integer_result = str(remainder) + integer_result
 
-    fractional_result = ""  # Исправленная строка
+    fractional_result = ""
     precision = 10
     while fractional_part > 0 and precision > 0:
         fractional_part *= base

@@ -1,0 +1,516 @@
+[33mcommit f6e12649682c61b04fed68e5b5228371a326d5d7[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: Tyushev Sergey <gapatun337@gmail.com>
+Date:   Wed Jan 24 20:39:49 2024 +0500
+
+    lab2 v1
+
+[1mdiff --git a/lab2 b/lab2[m
+[1mnew file mode 100644[m
+[1mindex 0000000..8ce6009[m
+[1m--- /dev/null[m
+[1m+++ b/lab2[m
+[36m@@ -0,0 +1,276 @@[m
+[32m+[m[32mimport math[m
+[32m+[m[32mimport random[m
+[32m+[m
+[32m+[m[32mdef task1():[m
+[32m+[m
+[32m+[m[32m def is_square(num):[m
+[32m+[m[32m    if num < 0:[m
+[32m+[m[32m        return False[m
+[32m+[m[32m    else:[m
+[32m+[m[32m        sqrt = math.isqrt(num)[m
+[32m+[m[32m        return sqrt * sqrt == num[m
+[32m+[m
+[32m+[m[32mimport math[m
+[32m+[m
+[32m+[m[32mdef is_square(num):[m
+[32m+[m[32m    if num < 0:[m
+[32m+[m[32m        return False[m
+[32m+[m[32m    else:[m
+[32m+[m[32m        sqrt = math.isqrt(num)[m
+[32m+[m[32m        return sqrt * sqrt == num[m
+[32m+[m
+[32m+[m[32mdef is_divisible_by_six(num):[m
+[32m+[m[32m    return num % 6 == 0[m
+[32m+[m
+[32m+[m[32mdef number_checker():[m
+[32m+[m[32m    while True:[m
+[32m+[m[32m        user_input = input("Введите число (для выхода введите 'q'): ")[m
+[32m+[m[32m        if user_input == 'q':[m
+[32m+[m[32m            break[m
+[32m+[m[32m        try:[m
+[32m+[m[32m            number = int(user_input)[m
+[32m+[m[32m            if is_square(number):[m
+[32m+[m[32m                print("Число является квадратом целого числа")[m
+[32m+[m[32m            else:[m
+[32m+[m[32m                print("Число не является квадратом целого числа")[m
+[32m+[m[32m            if is_divisible_by_six(number):[m
+[32m+[m[32m                print("Число делится на 6 без остатка")[m
+[32m+[m[32m            else:[m
+[32m+[m[32m                print("Число не делится на 6 без остатка")[m
+[32m+[m[32m        except ValueError:[m
+[32m+[m[32m            print("Некорректный ввод! Попробуйте еще раз")[m
+[32m+[m
+[32m+[m[32mnumber_checker()[m
+[32m+[m
+[32m+[m[32mtask1()[m
+[32m+[m
+[32m+[m
+[32m+[m
+[32m+[m[32mimport numpy as np[m
+[32m+[m[32mimport matplotlib.pyplot as plt[m
+[32m+[m
+[32m+[m[32mdef task2():[m[41m   [m
+[32m+[m[32m import numpy as np[m
+[32m+[m[32m import matplotlib.pyplot as plt[m
+[32m+[m[32mdef f(x):[m
+[32m+[m[32m    if x >= 0:[m
+[32m+[m[32m        return 2 * x**3 - 2[m
+[32m+[m[32m    else:[m
+[32m+[m[32m        return -np.sin(x)[m
+[32m+[m[32m    def plot_function(a, b):[m
+[32m+[m[32m        x = np.linspace(a, b, 1000)[m
+[32m+[m[32m        y = np.vectorize(f)(x)[m
+[32m+[m
+[32m+[m[32m        plt.plot(x, y)[m
+[32m+[m[32m        plt.xlabel('x')[m
+[32m+[m[32m        plt.ylabel('f(x)')[m
+[32m+[m[32m        plt.title('График функции f(x)')[m
+[32m+[m[32m        plt.grid(True)[m
+[32m+[m[32m        plt.show()[m
+[32m+[m
+[32m+[m[32m    a = float(input("Введите значение a: "))[m
+[32m+[m[32m    b = float(input("Введите значение b: "))[m
+[32m+[m
+[32m+[m[32m    plot_function(a, b)[m
+[32m+[m
+[32m+[m[32mtask2()[m[41m [m
+[32m+[m
+[32m+[m
+[32m+[m
+[32m+[m
+[32m+[m
+[32m+[m[32mdef task3():[m
+[32m+[m
+[32m+[m[32m import math[m
+[32m+[m[32mdef decimal_in_new_numeral_system(number, base):[m
+[32m+[m[32m    integer_part = int(number)[m
+[32m+[m[32m    fractional_part = number - integer_part[m
+[32m+[m
+[32m+[m[32m    integer_result = ""[m
+[32m+[m[32m    while integer_part > 0:[m
+[32m+[m[32m        remainder = integer_part % base[m
+[32m+[m[32m        integer_part //= base[m
+[32m+[m
+[32m+[m[32m        if remainder > 9:[m
+[32m+[m[32m            remainder = chr(ord('A') + remainder - 10)[m
+[32m+[m
+[32m+[m[32m        integer_result = str(remainder) + integer_result[m
+[32m+[m
+[32m+[m[32m    fractional_result = ""  # Исправленная строка[m
+[32m+[m[32m    precision = 10[m
+[32m+[m[32m    while fractional_part > 0 and precision > 0:[m
+[32m+[m[32m        fractional_part *= base[m
+[32m+[m[32m        integer_part = int(fractional_part)[m
+[32m+[m[32m        fractional_part -= integer_part[m
+[32m+[m
+[32m+[m[32m        if integer_part > 9:[m
+[32m+[m[32m            integer_part = chr(ord('A') + integer_part - 10)[m
+[32m+[m
+[32m+[m[32m        fractional_result += str(integer_part)[m
+[32m+[m[32m        precision -= 1[m
+[32m+[m
+[32m+[m[32m    result = "{}.{}".format(integer_result, fractional_result)[m
+[32m+[m[32m    return result[m
+[32m+[m
+[32m+[m[32mnumber = float(input("Введите десятичную дробь: "))[m
+[32m+[m[32mbase = int(input("Введите основание новой системы счисления: "))[m
+[32m+[m
+[32m+[m[32mresult = decimal_in_new_numeral_system(number, base)[m
+[32m+[m[32mprint("Результат: {}".format(result))[m
+[32m+[m
+[32m+[m[32mtask3()[m
+[32m+[m
+[32m+[m
+[32m+[m
+[32m+[m
+[32m+[m[32mdef task4():[m
+[32m+[m
+[32m+[m[32m import numpy as np[m
+[32m+[m[32m import matplotlib.pyplot as plt[m
+[32m+[m
+[32m+[m[32m# Фигура 1[m
+[32m+[m[32mx_figure1 = [3, 5, 4, 6, 7]  # обновлены координаты точек[m
+[32m+[m[32my_figure1 = [0, -1, 2, 4, 0]  # обновлены координаты точек[m
+[32m+[m
+[32m+[m[32m# Окружность фигуры 1[m
+[32m+[m[32mcenter1 = (5, 0)[m
+[32m+[m[32mradius1 = 2[m
+[32m+[m[32mtheta1 = np.linspace(0, np.pi, 100)[m
+[32m+[m[32mx_circle1 = center1[0] + radius1 * np.cos(theta1)[m
+[32m+[m[32my_circle1 = center1[1] - radius1 * np.sin(theta1)[m
+[32m+[m
+[32m+[m[32m# Фигура 2[m
+[32m+[m[32mx_figure2 = [-3, -5, -4, 0, 4, 1][m
+[32m+[m[32my_figure2 = [3, 2, -2, -1, 4, 3][m
+[32m+[m
+[32m+[m[32m# Окружность фигуры 2[m
+[32m+[m[32mcenter2 = (-1, 3)[m
+[32m+[m[32mradius2 = 2[m
+[32m+[m[32mtheta2 = np.linspace(0, np.pi, 100)[m
+[32m+[m[32mx_circle2 = center2[0] + radius2 * np.cos(theta2)[m
+[32m+[m[32my_circle2 = center2[1] + radius2 * np.sin(theta2)[m
+[32m+[m
+[32m+[m[32m# Ввод координат точки пользователем[m
+[32m+[m[32muser_x = float(input("Введите значение x для точки: "))[m
+[32m+[m[32muser_y = float(input("Введите значение y для точки: "))[m
+[32m+[m
+[32m+[m[32m# График[m
+[32m+[m[32mfig, ax = plt.subplots()[m
+[32m+[m
+[32m+[m[32m# Фигура 1[m
+[32m+[m[32max.plot(x_figure1, y_figure1, color='blue')[m
+[32m+[m
+[32m+[m[32m# Окружность фигуры 1[m
+[32m+[m[32max.plot(x_circle1, y_circle1, color='blue')[m
+[32m+[m
+[32m+[m[32m# Фигура 2[m
+[32m+[m[32max.plot(x_figure2, y_figure2, color='blue')[m
+[32m+[m
+[32m+[m[32m# Окружность фигуры 2[m
+[32m+[m[32max.plot(x_circle2, y_circle2, color='blue')[m
+[32m+[m
+[32m+[m[32m# Точка пользователя[m
+[32m+[m[32max.scatter(user_x, user_y, color='red')[m
+[32m+[m
+[32m+[m[32m# Проверка, находится ли точка внутри фигуры[m
+[32m+[m[32mis_inside_figure = (user_x >= min(x_figure1) and user_x <= max(x_figure1) and[m
+[32m+[m[32m                    user_y >= min(y_figure1) and user_y <= max(y_figure1)) or ([m
+[32m+[m[32m                        user_x >= min(x_figure2) and user_x <= max(x_figure2) and[m
+[32m+[m[32m                        user_y >= min(y_figure2) and user_y <= max(y_figure2)) or ([m
+[32m+[m[32m                            user_x - center2[0])**2 + (user_y - center2[1])**2 <= radius2**2[m
+[32m+[m
+[32m+[m[32mif is_inside_figure:[m
+[32m+[m[32m    plt.title("Точка находится внутри фигуры", fontsize=12)[m
+[32m+[m[32melse:[m
+[32m+[m[32m    plt.title("Точка не попадает в фигуру", fontsize=12)[m
+[32m+[m
+[32m+[m[32m# Отображение графика[m
+[32m+[m[32mplt.grid(True)[m
+[32m+[m[32mplt.xlabel("x", fontsize=10)[m
+[32m+[m[32mplt.ylabel("y", fontsize=10)[m
+[32m+[m[32mplt.show()[m
+[32m+[m
+[32m+[m[32mtask4()[m
+[32m+[m
+[32m+[m
+[32m+[m
+[32m+[m
+[32m+[m
+[32m+[m[32mdef task5():[m
+[32m+[m[41m    [m
+[32m+[m[32m import math[m
+[32m+[m[32mdef square_and_cube_numbers(number):[m
+[32m+[m[32m    str_number = str(number)[m
+[32m+[m[32m    first_digit = int(str_number[0])[m
+[32m+[m[32m    last_digit = int(str_number[-1])[m
+[32m+[m
+[32m+[m[32m    if first_digit % 2 == 0 and last_digit == 0:[m
+[32m+[m[32m        result = number ** 3[m
+[32m+[m[32m    elif first_digit % 2 == 1 and last_digit % 2 == 1:[m
+[32m+[m[32m        result = number ** 2[m
+[32m+[m[32m    else:[m
+[32m+[m[32m        result = None[m
+[32m+[m
+[32m+[m[32m    return result[m
+[32m+[m
+[32m+[m[32mnumber = int(input("Введите число: "))[m
+[32m+[m
+[32m+[m[32mresult = square_and_cube_numbers(number)[m
+[32m+[m[32mif result is not None:[m
+[32m+[m[32m    print(result)[m
+[32m+[m[32melse:[m
+[32m+[m[32m    print("Число не удовлетворяет условиям.")[m[41m   [m
+[32m+[m[41m    [m
+[32m+[m[32mtask5()[m
+[32m+[m
+[32m+[m
+[32m+[m
+[32m+[m
+[32m+[m
+[32m+[m[32mdef task6():[m
+[32m+[m[32m import math[m
+[32m+[m[32mdef calculate_remaining_months(labworks_total, consultations_per_month, attempts_per_consultation):[m
+[32m+[m[32m    months = 0[m
+[32m+[m
+[32m+[m[32m    while labworks_total > 0:[m
+[32m+[m[32m        months += 1[m
+[32m+[m[32m        attempts_this_month = consultations_per_month * attempts_per_consultation[m
+[32m+[m
+[32m+[m[32m        labworks_total -= attempts_this_month[m
+[32m+[m
+[32m+[m[32m        if labworks_total > 0:[m
+[32m+[m[32m            consultations_per_month = max(0, consultations_per_month - 1)[m
+[32m+[m[32m            attempts_per_consultation = max(1, attempts_per_consultation - 1)[m
+[32m+[m
+[32m+[m[32m    return months[m
+[32m+[m
+[32m+[m
+[32m+[m[32mlabworks_total = int(input("Введите количество лабораторных работ: "))[m
+[32m+[m[32mconsultations_per_month = int(input("Введите количество консультаций в месяц: "))[m
+[32m+[m[32mattempts_per_consultation = int(input("Введите количество попыток на каждой консультации: "))[m
+[32m+[m
+[32m+[m[32mremaining_months = calculate_remaining_months(labworks_total, consultations_per_month, attempts_per_consultation)[m
+[32m+[m[32mprint("Оставшееся количество месяцев:", remaining_months)[m[41m  [m
+[32m+[m[41m    [m
+[32m+[m[32mtask6()[m
+[32m+[m
+[32m+[m[32mdef task7():[m
+[32m+[m[32m import math[m
+[32m+[m[32mdef calculate_product(n):[m
+[32m+[m[32m    cos_product = 1[m
+[32m+[m[32m    sin_product = 1[m
+[32m+[m
+[32m+[m[32m    for i in range(1, n+1):[m
+[32m+[m[32m        cos_product *= math.cos(i)[m
+[32m+[m[41m    [m
+[32m+[m[32m    for i in range(2, 2*n+1, 2):[m
+[32m+[m[32m        sin_product *= math.sin(i)[m
+[32m+[m[41m    [m
+[32m+[m[32m    result = cos_product / sin_product[m
+[32m+[m[32m    return result[m
+[32m+[m
+[32m+[m[32mn = int(input("Введите значение n: "))[m
+[32m+[m[32mresult = calculate_product(n)[m
+[32m+[m[32mprint("Произведение числовой последовательности:", result)[m
+[32m+[m[41m    [m
+[32m+[m[32mtask7()[m
+\ No newline at end of file[m
+
+[33mcommit 6c5afa0b7008c2445d2e7c78fd9eff256bf1c09f[m
+Author: gapatun337 <144454364+gapatun337@users.noreply.github.com>
+Date:   Wed Jan 24 18:52:46 2024 +0500
+
+    Add files via upload
+
+[1mdiff --git a/Lab1.py b/Lab1.py[m
+[1mnew file mode 100644[m
+[1mindex 0000000..7a11d12[m
+[1m--- /dev/null[m
+[1m+++ b/Lab1.py[m
+[36m@@ -0,0 +1,213 @@[m
+[32m+[m[32mfrom math import tan, sqrt[m[41m[m
+[32m+[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32mdef task1():[m[41m[m
+[32m+[m[32m    print("Привет! Приступаю к решению задания N1")[m[41m[m
+[32m+[m[32m    # блок ввода данных[m[41m[m
+[32m+[m[32m    x = float(input("Введи x: "))[m[41m[m
+[32m+[m[32m    y = float(input("Введи y: "))[m[41m[m
+[32m+[m[32m    z = float(input("Введи z: "))[m[41m[m
+[32m+[m[32m    # блок вычисления[m[41m[m
+[32m+[m[32m    a = (1 + x + (abs(y))*(1/2)) / (x + (y*(1/3)))[m[41m[m
+[32m+[m[32m    b = tan((x - y) / (x + y))[m[41m[m
+[32m+[m[32m    # блок вывода данных[m[41m[m
+[32m+[m[32m    print("Ответ: a = {0:.4f}, b = {1:.4f}. Спасибо, что воспользовался мной!".format(a, b))[m[41m[m
+[32m+[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32mtask1()[m[41m[m
+[32m+[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32mdef task2():[m[41m[m
+[32m+[m[41m    [m
+[32m+[m[32m    print("Привет! Приступаю к решению задания N2")[m[41m[m
+[32m+[m[32m    # блок ввода данных[m[41m[m
+[32m+[m[32m    x = float(input("Введи x: "))[m[41m[m
+[32m+[m[32m    # блок вычисления[m[41m[m
+[32m+[m[32m    a = -2[m[41m[m
+[32m+[m[32m    b = -2[m[41m[m
+[32m+[m[32m    x_result = (a * ((x ** b + x) / 3) - (x ** b) * (1 / 3))[m[41m[m
+[32m+[m[32m    # блок вывода данных[m[41m[m
+[32m+[m[32m    print('Ответ: x = {:.4f}. Спасибо, что воспользовался мной!'.format(x_result))[m[41m[m
+[32m+[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32mtask2()[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32mimport math[m[41m[m
+[32m+[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32mdef task3():[m[41m[m
+[32m+[m[32m    print('Привет! Приступаю к решению задания N3')[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32m    x = float(input('введи x: '))[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32m    base = 3[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32m    x_result = (math.log(math.cosh(x ** 1 / 3), base))[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32m    print('Ответ: x = {:.4f}. Спасибо, что воспользовался мной!'.format(x_result))[m[41m[m
+[32m+[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32mtask3()[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32mimport math[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32mdef task4(radius=None, distance=None):[m[41m[m
+[32m+[m[32m    print('Привет! Приступаю к решению задания N4')[m[41m[m
+[32m+[m[41m    [m
+[32m+[m[32m    if radius is None:[m[41m[m
+[32m+[m[32m        radius = float(input("Введите радиус: "))[m[41m[m
+[32m+[m[32m    if distance is None:[m[41m[m
+[32m+[m[32m        distance = float(input("Введите расстояние: "))[m[41m[m
+[32m+[m[41m    [m
+[32m+[m[32m    section_area = calculate_section_area(radius, distance)[m[41m[m
+[32m+[m[32m    print("Площадь сечения шара:", section_area)[m[41m[m
+[32m+[m[41m    [m
+[32m+[m[32mdef calculate_section_area(radius, distance):[m[41m[m
+[32m+[m[32m    if distance >= radius:[m[41m[m
+[32m+[m[32m        return 0[m[41m[m
+[32m+[m[32m    else:[m[41m[m
+[32m+[m[32m        section_radius = math.sqrt(radius**2 - distance**2)[m[41m[m
+[32m+[m[32m        section_area = math.pi * section_radius**2[m[41m[m
+[32m+[m[32m        return section_area[m[41m[m
+[32m+[m[41m    [m
+[32m+[m[32mtask4()[m[41m   [m
+[32m+[m[41m[m
+[32m+[m[32mdef task5():[m[41m[m
+[32m+[m[32m    print('Привет! Приступаю к решению задания N5')[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32m    m1 = float(input('введи m1: '))[m[41m[m
+[32m+[m[32m    v1 = float(input('введи v1: '))[m[41m[m
+[32m+[m[32m    m2 = float(input('введи m2: '))[m[41m[m
+[32m+[m[32m    v2 = float(input('введи v2: '))[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32m    v = (m1 * v1 + m2 * v2) / (m1 + m2)[m[41m[m
+[32m+[m[32m    v1_after = 2 * v - v1[m[41m[m
+[32m+[m[32m    v2_after = 2 * v - v2[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32m    print("Скорость движения тележек после соударения: {:.2f} м/с".format(v))[m[41m[m
+[32m+[m[32m    print("Скорость первой тележки после соударения: {:.2f} м/с".format(v1_after))[m[41m[m
+[32m+[m[32m    print("Скорость второй тележки после соударения: {:.2f} м/с".format(v2_after))[m[41m[m
+[32m+[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32mtask5()[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32mimport math[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32mdef task6():[m[41m[m
+[32m+[m[32m    print('Привет! Приступаю к решению задания N6')[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32mdef calculate_prism_surface_area(radius, height):[m[41m[m
+[32m+[m[41m    [m
+[32m+[m[32m    cylinder_circumference = 2 * math.pi * radius[m[41m[m
+[32m+[m[41m    [m
+[32m+[m[32m    prism_surface_area = cylinder_circumference * height[m[41m[m
+[32m+[m[41m    [m
+[32m+[m[32m    return prism_surface_area[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32mtask6()[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32mradius = float(input("Введите радиус основания цилиндра: "))[m[41m[m
+[32m+[m[32mheight = float(input("Введите высоту цилиндра: "))[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32msurface_area = calculate_prism_surface_area(radius, height)[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32mprint("Площадь боковой поверхности призмы:", surface_area)[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32mdef task7():[m[41m[m
+[32m+[m[32m    print('Привет! Приступаю к решению задания N7')[m[41m[m
+[32m+[m[41m    [m
+[32m+[m[32m    def solve_quadratic_equation(A, B, C):[m[41m[m
+[32m+[m[41m        [m
+[32m+[m[32m        discriminant = B**2 - 4*A*C[m[41m[m
+[32m+[m[41m    [m
+[32m+[m[41m        [m
+[32m+[m[32m        if discriminant < 0:[m[41m[m
+[32m+[m[32m            print("Действительных корней нет.")[m[41m[m
+[32m+[m[32m        else:[m[41m[m
+[32m+[m[41m            [m
+[32m+[m[32m            root1 = (-B + math.sqrt(discriminant)) / (2*A)[m[41m[m
+[32m+[m[32m            root2 = (-B - math.sqrt(discriminant)) / (2*A)[m[41m[m
+[32m+[m[41m    [m
+[32m+[m[41m            [m
+[32m+[m[32m            if root1 < root2:[m[41m[m
+[32m+[m[32m                print("{:.4f}".format(root1))[m[41m[m
+[32m+[m[32m                print("{:.4f}".format(root2))[m[41m[m
+[32m+[m[32m            else:[m[41m[m
+[32m+[m[32m                print("{:.4f}".format(root2))[m[41m[m
+[32m+[m[32m                print("{:.4f}".format(root1))[m[41m[m
+[32m+[m[41m    [m
+[32m+[m[41m    [m
+[32m+[m[32m    A = float(input("Введите коэффициент A: "))[m[41m[m
+[32m+[m[32m    B = float(input("Введите коэффициент B: "))[m[41m[m
+[32m+[m[32m    C = float(input("Введите коэффициент C: "))[m[41m[m
+[32m+[m[41m    [m
+[32m+[m[41m    [m
+[32m+[m[32m    if A == 0:[m[41m[m
+[32m+[m[32m        print("Коэффициент A не может быть нулем.")[m[41m[m
+[32m+[m[32m    else:[m[41m[m
+[32m+[m[41m        [m
+[32m+[m[32m        solve_quadratic_equation(A, B, C)[m[41m[m
+[32m+[m[41m    [m
+[32m+[m[32mtask7()[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32mdef task8():[m[41m[m
+[32m+[m[32m    print('Привет! Приступаю к решению задания N8')[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32m    def calculate_angular_velocity(latitude):[m[41m[m
+[32m+[m[32m        # Переводим широту из градусов в радианы[m[41m[m
+[32m+[m[32m        latitude_rad = math.radians(latitude)[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32m        # Расчитываем угловую скорость вращения Земли[m[41m[m
+[32m+[m[32m        angular_velocity = 2 * math.pi / 24  # 2π / 24 часа[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32m        return angular_velocity[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32m    def calculate_linear_velocity(radius, latitude):[m[41m[m
+[32m+[m[32m        # Расчитываем угловую скорость вращения Земли[m[41m[m
+[32m+[m[32m        angular_velocity = calculate_angular_velocity(latitude)[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32m        # Расчитываем линейную скорость[m[41m[m
+[32m+[m[32m        linear_velocity = radius * angular_velocity[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32m        return linear_velocity[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32m    def calculate_linear_acceleration(radius, latitude):[m[41m[m
+[32m+[m[32m        # Расчитываем угловую скорость вращения Земли[m[41m[m
+[32m+[m[32m        angular_velocity = calculate_angular_velocity(latitude)[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32m        # Расчитываем линейное ускорение[m[41m[m
+[32m+[m[32m        linear_acceleration = radius * angular_velocity**2[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32m        return linear_acceleration[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32m    # Радиус Земли (в км)[m[41m[m
+[32m+[m[32m    radius_earth = 6370[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32m    # Ввод широты точки[m[41m[m
+[32m+[m[32m    latitude = float(input("Введите широту точки в градусах: "))[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32m    # Расчет линейной скорости[m[41m[m
+[32m+[m[32m    linear_velocity = calculate_linear_velocity(radius_earth, latitude)[m[41m[m
+[32m+[m[32m    print("Линейная скорость точки на широте {}: {:.2f} км/ч".format(latitude, linear_velocity))[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32m    # Расчет линейного ускорения[m[41m[m
+[32m+[m[32m    linear_acceleration = calculate_linear_acceleration(radius_earth, latitude)[m[41m[m
+[32m+[m[32m    print("Линейное ускорение точки на широте {}: {:.2f} км/ч^2".format(latitude, linear_acceleration))[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32mtask8()[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32mdef task9():[m[41m[m
+[32m+[m[32m    print('Привет! Приступаю к решению задания N9')[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32m    exchange_rate = 0.098[m[41m[m
+[32m+[m[32m    commission = 0.01[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32m    amount_yuan = float(input("Введите сумму в юанях ¥: "))[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32m    amount_rubles = amount_yuan * exchange_rate * (1 - commission)[m[41m[m
+[32m+[m[32m    amount_rubles = round(amount_rubles, 2)[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32m    print("Сумма в рублях: {:.2f}".format(amount_rubles))[m[41m[m
+[32m+[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32mtask9()[m
+\ No newline at end of file[m
