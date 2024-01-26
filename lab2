@@ -3,14 +3,7 @@ import random
 
 def task1():
 
- def is_square(num):
-    if num < 0:
-        return False
-    else:
-        sqrt = math.isqrt(num)
-        return sqrt * sqrt == num
-
-import math
+ import math
 
 def is_square(num):
     if num < 0:

@@ -1,0 +1,196 @@
+def print_char_list(array):
+     for char in array:
+        print(char, end=" ")
+     print()
+
+def task1():
+    n = int(input("Введите количество элементов массива: "))
+    array = []
+    for i in range(n):
+        char = input("Введите символ: ")
+        array.append(char)
+    print("Исходный массив:")
+    print_char_list(array)
+
+    for i in range(len(array)):
+        if array[i].isdigit():
+            array[i] = "*"
+    print("Модифицированный массив:")
+    print_char_list(array)
+
+task1()
+
+
+import random
+
+def print_char_2d_array(array):
+    for row in array:
+        for char in row:
+            print(char, end=' ')
+        print()
+
+def preobrazovanie(array):
+    for i in range(len(array)):
+        for j in range(len(array[i])):
+            if i < len(array)-1 and j < len(array[i])-1:
+                if array[i][j] == array[i][j+1] and array[i][j] == array[i+1][j]:
+                    array[i][j] = '×'
+    return array
+
+def task2():
+    n = 5
+
+    # Создание и заполнение случайного двумерного массива символов
+    array = [[random.choice('abcdefghijklmnopqrstuvwxyz0123456789') for _ in range(n+1)] for _ in range(n+1)]
+
+    print("Исходный массив:")
+    print_char_2d_array(array)
+
+    print("\nМассив после модификации:")
+    modified_array = preobrazovanie(array)
+    print_char_2d_array(modified_array)
+
+task2()
+
+
+
+def task3():
+    for _ in range(5):
+        print("Введите текст:")
+        input_text = input()
+
+        if input_text[0].isupper():
+            with open("file1.txt", "a") as file1:
+                file1.write(input_text + "\n")
+        else:
+            with open("file2.txt", "a") as file2:
+                file2.write(input_text + "\n")
+
+task3()
+
+
+import random
+
+def print_string_list(array):
+    for string in array:
+        print(string)
+
+def random_choice(array):
+    return random.choice(array)
+def task4():
+    array = [
+        "Физика",
+        "Математика",
+        "Английский",
+        "Философия",
+        "Физкультура",
+        "Инженерная графика",
+        "История",
+        "Основы Российской государственности",
+        "Информатика",
+        "УИР"
+    ]
+
+    print_string_list(array)
+
+    while True:
+        user_input = input("Для получения случайного элемента массива нажмите Enter, или введите 'exit' для выхода: ")
+        if user_input == "exit":
+            print("Программа завершена.")
+            break
+        else:
+            random_element = random_choice(array)
+            print(random_element)
+
+task4()
+
+
+
+def task5():
+    text = input("Введите текст: ")
+
+    with open('task1.out', 'w') as file:
+        file.write(text)
+
+task5()
+
+
+
+import re
+import numpy as np
+import matplotlib.pyplot as plt
+
+def task6():
+    with open('variant40.txt', 'r') as file:
+        lines = file.readlines()
+
+    header_index = -1
+    for i, line in enumerate(lines):
+        if line.strip().startswith('NODE'):
+            header_index = i + 1
+            break
+    
+    if header_index == -1:
+        print("Не найдены названия характеристик.")
+        return
+    
+    header_line = lines[header_index]
+    headers = header_line.strip().split()
+
+    data = {}
+    for header in headers:
+        data[header] = []
+
+    for line in lines[header_index+1:]:
+        line_data = re.findall(r'-?\d+\.\d+E[+-]\d+|-?\d+', line)
+        if len(line_data) >= len(headers):
+            for i, value in enumerate(line_data[:len(headers)]):
+                header = headers[i]
+                try:
+                    data[header].append(float(value))
+                except ValueError:
+                    print(f"Ошибка преобразования значения '{value}' в число на строке '{line.strip()}'")
+                    return
+        else:
+            print(f"Ошибка разбиения строки '{line.strip()}' на значения")
+            return
+
+    for header, values in data.items():
+        filename = header + '.dat'
+        with open(filename, 'w') as file:
+            for value in values:
+                file.write(str(value) + '\n')
+
+    for header, values in data.items():
+        plt.plot(values, label=header)
+    plt.legend()
+    plt.show()
+
+task6()
+
+
+
+import os
+
+def task7():
+    print("Введите имя новой директории:")
+    dir_name = input() # Считываем имя новой директории
+
+    try:
+        os.mkdir(dir_name) # Создаем новую директорию
+        print("Директория", dir_name, "создана!")
+    except FileExistsError:
+        print("Директория", dir_name, "уже существует!")
+
+    print("Введите имя нового файла:")
+    file_name = input() # Считываем имя нового файла
+
+    file_path = os.path.join(dir_name, file_name) # Получаем путь до нового файла
+
+    try:
+        with open(file_path, 'w'):
+            print("Файл", file_name, "создан в директории", dir_name, "!")
+    except FileNotFoundError:
+        print("Указанная директория", dir_name, "не существует!")
+        
+task7()
