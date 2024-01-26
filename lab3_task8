@@ -1,0 +1,62 @@
+import os
+
+def print_menu():
+    print("Выберите действие:")
+    print("1. Создание файла")
+    print("2. Удаление файла")
+    print("3. Создание директории")
+    print("4. Удаление директории")
+    print("0. Выход")
+
+def create_file():
+    filename = input("Введите имя файла: ")
+    try:
+        with open(filename, 'w') as file:
+            print("Файл", filename, "создан")
+    except OSError:
+        print("Ошибка при создании файла")
+
+def delete_file():
+    filename = input("Введите имя файла: ")
+    try:
+        os.remove(filename)
+        print("Файл", filename, "удален")
+    except FileNotFoundError:
+        print("Файл не найден")
+
+def create_directory():
+    dirname = input("Введите имя директории: ")
+    try:
+        os.mkdir(dirname)
+        print("Директория", dirname, "создана")
+    except OSError:
+        print("Ошибка при создании директории")
+
+def delete_directory():
+    dirname = input("Введите имя директории: ")
+    try:
+        os.rmdir(dirname)
+        print("Директория", dirname, "удалена")
+    except FileNotFoundError:
+        print("Директория не найдена")
+
+def main():
+    while True:
+        print_menu()
+        choice = input("Введите номер действия: ")
+
+        if choice == '1':
+            create_file()
+        elif choice == '2':
+            delete_file()
+        elif choice == '3':
+            create_directory()
+        elif choice == '4':
+            delete_directory()
+        elif choice == '0':
+            break
+        else:
+            print("Некорректный выбор")
+
+if __name__ == "__main__":
+    main()
