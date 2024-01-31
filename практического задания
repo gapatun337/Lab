@@ -1,0 +1,158 @@
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QApplication, QLabel, QLineEdit, QMainWindow, QPushButton, QVBoxLayout, QWidget, QFileDialog, QComboBox
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+import ast
+
+class MainWindow(QMainWindow):
+    def __init__(self, parent=None):
+        super(MainWindow, self).__init__(parent)
+        
+        # Заголовок окна
+        self.setWindowTitle("График")
+        
+        # Создание виджетов
+        self.canvas = FigureCanvas(plt.figure())
+        self.plot_button = QPushButton("Нарисовать график")
+        self.clear_button = QPushButton("Очистить график")
+        self.save_button = QPushButton("Сохранить график")
+
+        self.range_label = QLabel("Диапазон:")
+        self.range_start_input = QLineEdit('0')
+        self.range_end_input = QLineEdit('1')
+
+        self.function_label = QLabel("Функция:")
+        self.function_input = QLineEdit('x**3')
+
+        self.point_count_label = QLabel("Количество точек:")
+        self.point_count_input = QLineEdit('50')
+
+        self.function_list_label = QLabel("Список функций:")
+        self.function_list = QComboBox()
+        self.function_list.addItem("x**3")
+        self.function_list.addItem("x**2")
+        self.function_list.addItem("numpy.sin(x)")
+
+        self.add_function_label = QLabel("Добавить функцию:")
+        self.add_function_input = QLineEdit()
+
+        self.add_function_button = QPushButton("Добавить")
+
+        # Создание центрального виджета и макета для размещения компонента рисования
+        central_widget = QWidget()
+        layout = QVBoxLayout()
+        central_widget.setLayout(layout)
+        
+        # Добавление компонента рисования на макет
+        layout.addWidget(self.canvas)
+        layout.addWidget(self.plot_button)
+        layout.addWidget(self.clear_button)
+        layout.addWidget(self.save_button)
+        layout.addWidget(self.range_label)
+        layout.addWidget(self.range_start_input)
+        layout.addWidget(self.range_end_input)
+        layout.addWidget(self.function_label)
+        layout.addWidget(self.function_input)
+        layout.addWidget(self.point_count_label)
+        layout.addWidget(self.point_count_input)
+        layout.addWidget(self.function_list_label)
+        layout.addWidget(self.function_list)
+        layout.addWidget(self.add_function_label)
+        layout.addWidget(self.add_function_input)
+        layout.addWidget(self.add_function_button)
+        
+        # Установка центрального виджета в качестве основного виджета окна
+        self.setCentralWidget(central_widget)
+        
+        # Вызов функции для построения графика
+        self.plot_data()
+
+        # Привязка действий к кнопкам
+        self.plot_button.clicked.connect(self.plot_data)
+        self.clear_button.clicked.connect(self.clear_plot)
+        self.save_button.clicked.connect(self.save_plot)
+        self.add_function_button.clicked.connect(self.add_function)
+        self.function_list.currentIndexChanged.connect(self.select_function)
+
+    def plot_data(self):
+        try:
+            range_start = float(self.range_start_input.text())
+            range_end = float(self.range_end_input.text())
+            expression = self.function_input.text()
+            point_count = int(self.point_count_input.text())
+        except ValueError:
+            expression = "x**3"
+            range_start = 0
+            range_end = 1
+            point_count = 50
+        
+        x = np.linspace(range_start, range_end, point_count)
+
+        try:
+            ast.parse(expression)
+        except SyntaxError:
+            expression = "x**3"
+
+        functions = {"x**3": lambda x: x**3, "x**2": lambda x: x**2, "numpy.sin(x)": np.sin}
+        function = functions.get(expression, lambda x: x)
+
+        y = function(x)
+        
+        # Построение графика
+        plt.cla()  # Очистка предыдущего графика
+        plt.plot(x, y)
+        plt.grid(True)
+        plt.xlabel("x")
+        plt.ylabel("y")
+        plt.title(f"График функции: {expression}")
+
+        # Обновление компонента рисования
+        self.canvas.draw()
+    
+    def clear_plot(self):
+        plt.cla()
+        self.canvas.draw()
+    
+    def save_plot(self):
+        filename, _ = QFileDialog.getSaveFileName(self, "Сохранить график", "", "Текстовый файл (*.txt)")
+        if filename:
+            range_start = float(self.range_start_input.text())
+            range_end = float(self.range_end_input.text())
+            expression = self.function_input.text()
+            point_count = int(self.point_count_input.text())
+
+            x = np.linspace(range_start, range_end, point_count)
+
+            try:
+                ast.parse(expression)
+            except SyntaxError:
+                expression = "x**3"
+
+            functions = {"x**3": lambda x: x**3, "x**2": lambda x: x**2, "numpy.sin(x)": np.sin}
+            function = functions.get(expression, lambda x: x)
+
+            y = function(x)
+
+            data = np.vstack((x, y)).T
+            np.savetxt(filename, data, header="x,y", delimiter=",")
+
+    def add_function(self):
+        function = self.add_function_input.text()
+        if function:
+            self.function_list.addItem(function)
+            self.add_function_input.clear()
+
+    def select_function(self, index):
+        if index != -1:
+            self.function_input.setText(self.function_list.currentText())
+    
+# Создание экземпляра QApplication
+app = QApplication([])
+
+# Создание главного окна приложения
+main_window = MainWindow()
+main_window.show()
+
+# Запуск приложения
+app.exec_()
