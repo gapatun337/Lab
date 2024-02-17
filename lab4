@@ -1,154 +1,116 @@
-
-import tkinter as tk
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.patches import Circle
-
-def check_point():
-    x = float(entry_x.get())
-    y = float(entry_y.get())
-
-    # Уравнение круга с радиусом 5 и центром в (0, 0)
-    if x**2 + y**2 <= 5**2:
-        result_label.config(text="Точка внутри круга", fg='green')
-    else:
-        result_label.config(text="Точка снаружи круга", fg='red')
-
-def draw_figure():
-    fig, ax = plt.subplots()
-    
-    # Отображение круга с радиусом 5 и центром в (0, 0)
-    circle = Circle((0, 0), 5, alpha=0.5)
-    ax.add_patch(circle)
-    ax.set_aspect('equal', adjustable='datalim')
-    
-    plt.xlim(-10, 10)
-    plt.ylim(-10, 10)
-    plt.gca().set_aspect('equal', adjustable='box')
-    plt.show()
-
-def add_point():
-    x = float(entry_x_point.get())
-    y = float(entry_y_point.get())
-    
-    plt.scatter(x, y, color='red')
-    plt.show()
-
-# Создание главного окна
-root = tk.Tk()
-root.title("Определение попадания точки в область")
-
-# Создание элементов интерфейса для проверки точки
-label_x = tk.Label(root, text="X:")
-label_x.pack()
-entry_x = tk.Entry(root)
-entry_x.pack()
-
-label_y = tk.Label(root, text="Y:")
-label_y.pack()
-entry_y = tk.Entry(root)
-entry_y.pack()
-
-check_button = tk.Button(root, text="Проверить точку", command=check_point)
-check_button.pack()
-
-result_label = tk.Label(root, text="", fg='black')
-result_label.pack()
-
-# Создание элементов интерфейса для добавления точек
-label_x_point = tk.Label(root, text="X точки:")
-label_x_point.pack()
-entry_x_point = tk.Entry(root)
-entry_x_point.pack()
-
-label_y_point = tk.Label(root, text="Y точки:")
-label_y_point.pack()
-entry_y_point = tk.Entry(root)
-entry_y_point.pack()
-
-add_button = tk.Button(root, text="Добавить точку", command=add_point)
-add_button.pack()
-
-# Кнопка для отображения фигуры
-draw_button = tk.Button(root, text="Отобразить круг", command=draw_figure)
-draw_button.pack()
-
-# Запуск главного цикла
-
 import tkinter as tk
-import numpy as np
-import matplotlib.pyplot as plt
-from matplotlib.patches import Circle
 
-def check_point():
-    x = float(entry_x.get())
-    y = float(entry_y.get())
+def get_user_input_points(num_points):
+    x_points = []
+    y_points = []
+    
+    for i in range(num_points):
+        x = float(entry_points_x[i].get())
+        y = float(entry_points_y[i].get())
+        x_points.append(x)
+        y_points.append(y)
+    
+    return x_points, y_points
 
-    # Уравнение круга с радиусом 5 и центром в (0, 0)
-    if x**2 + y**2 <= 5**2:
-        result_label.config(text="Точка внутри круга", fg='green')
-    else:
-        result_label.config(text="Точка снаружи круга", fg='red')
+def is_point_inside_polygon(x_polygon, y_polygon, x, y):
+    n = len(x_polygon)
+    inside = False
 
-def draw_figure():
+    p1x, p1y = x_polygon[0], y_polygon[0]
+    for i in range(n+1):
+        p2x, p2y = x_polygon[i % n], y_polygon[i % n]
+        if y > min(p1y, p2y):
+            if y <= max(p1y, p2y):
+                if x <= max(p1x, p2x):
+                    if p1y != p2y:
+                        xinters = (y-p1y)*(p2x-p1x)/(p2y-p1y)+p1x
+                        if p1x == p2x or x <= xinters:
+                            inside = not inside
+        p1x, p1y = p2x, p2y
+
+    return inside
+
+def plot_figure_and_point(x_polygon, y_polygon, user_x, user_y):
     fig, ax = plt.subplots()
     
-    # Отображение круга с радиусом 5 и центром в (0, 0)
-    circle = Circle((0, 0), 5, alpha=0.5)
-    ax.add_patch(circle)
-    ax.set_aspect('equal', adjustable='datalim')
+    # Фигура
+    ax.plot(x_polygon + [x_polygon[0]], y_polygon + [y_polygon[0]], color='blue')  # Замыкаем фигуру
     
-    plt.xlim(-10, 10)
-    plt.ylim(-10, 10)
-    plt.gca().set_aspect('equal', adjustable='box')
+    # Точка пользователя
+    is_inside = is_point_inside_polygon(x_polygon, y_polygon, user_x, user_y)
+    
+    if is_inside:
+        ax.scatter(user_x, user_y, color='green', label="Точка внутри фигуры")
+    else:
+        ax.scatter(user_x, user_y, color='red', label="Точка вне фигуры")
+    
+    if is_inside:
+        plt.title("Точка находится внутри фигуры", fontsize=12)
+    else:
+        plt.title("Точка не попадает в фигуру", fontsize=12)
+    
+    plt.grid(True)
+    plt.xlabel("x", fontsize=10)
+    plt.ylabel("y", fontsize=10)
+    plt.legend()
     plt.show()
 
-def add_point():
-    x = float(entry_x_point.get())
-    y = float(entry_y_point.get())
-    
-    plt.scatter(x, y, color='red')
-    plt.show()
+def on_submit():
+    num_points = int(entry_num_points.get())
+    x_polygon, y_polygon = get_user_input_points(num_points)
+    user_x = float(entry_user_x.get())
+    user_y = float(entry_user_y.get())
+    plot_figure_and_point(x_polygon, y_polygon, user_x, user_y)
 
-# Создание главного окна
+# Создание графического пользовательского интерфейса
 root = tk.Tk()
-root.title("Определение попадания точки в область")
+root.title("Проверка точки внутри фигуры")
 
-# Создание элементов интерфейса для проверки точки
-label_x = tk.Label(root, text="X:")
-label_x.pack()
-entry_x = tk.Entry(root)
-entry_x.pack()
+label_num_points = tk.Label(root, text="Введите количество точек для фигуры:")
+label_num_points.pack()
 
-label_y = tk.Label(root, text="Y:")
-label_y.pack()
-entry_y = tk.Entry(root)
-entry_y.pack()
+entry_num_points = tk.Entry(root)
+entry_num_points.pack()
 
-check_button = tk.Button(root, text="Проверить точку", command=check_point)
-check_button.pack()
+def add_point_fields():
+    num_points = int(entry_num_points.get())
+    global entry_points_x, entry_points_y
+    entry_points_x = []
+    entry_points_y = []
+    
+    for i in range(num_points):
+        label_x = tk.Label(root, text=f"x{i + 1}:")
+        label_x.pack()
+        
+        entry_x = tk.Entry(root)
+        entry_x.pack()
+        entry_points_x.append(entry_x)
+        
+        label_y = tk.Label(root, text=f"y{i + 1}:")
+        label_y.pack()
+        
+        entry_y = tk.Entry(root)
+        entry_y.pack()
+        entry_points_y.append(entry_y)
+    
+add_point_button = tk.Button(root, text="Добавить поля для точек", command=add_point_fields)
+add_point_button.pack()
 
-result_label = tk.Label(root, text="", fg='black')
-result_label.pack()
+label_user_x = tk.Label(root, text="x точки пользователя:")
+label_user_x.pack()
 
-# Создание элементов интерфейса для добавления точек
-label_x_point = tk.Label(root, text="X точки:")
-label_x_point.pack()
-entry_x_point = tk.Entry(root)
-entry_x_point.pack()
+entry_user_x = tk.Entry(root)
+entry_user_x.pack()
 
-label_y_point = tk.Label(root, text="Y точки:")
-label_y_point.pack()
-entry_y_point = tk.Entry(root)
-entry_y_point.pack()
+label_user_y = tk.Label(root, text="y точки пользователя:")
+label_user_y.pack()
 
-add_button = tk.Button(root, text="Добавить точку", command=add_point)
-add_button.pack()
+entry_user_y = tk.Entry(root)
+entry_user_y.pack()
 
-# Кнопка для отображения фигуры
-draw_button = tk.Button(root, text="Отобразить круг", command=draw_figure)
-draw_button.pack()
-
-# Запуск главного цикла
+btn_submit = tk.Button(root, text="Подтвердить", command=on_submit)
+btn_submit.pack()
 
 root.mainloop()
