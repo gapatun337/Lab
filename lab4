@@ -73,4 +73,81 @@ draw_button = tk.Button(root, text="Отобразить круг", command=draw
 draw_button.pack()
 
 # Запуск главного цикла
+
+import tkinter as tk
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.patches import Circle
+
+def check_point():
+    x = float(entry_x.get())
+    y = float(entry_y.get())
+
+    # Уравнение круга с радиусом 5 и центром в (0, 0)
+    if x**2 + y**2 <= 5**2:
+        result_label.config(text="Точка внутри круга", fg='green')
+    else:
+        result_label.config(text="Точка снаружи круга", fg='red')
+
+def draw_figure():
+    fig, ax = plt.subplots()
+    
+    # Отображение круга с радиусом 5 и центром в (0, 0)
+    circle = Circle((0, 0), 5, alpha=0.5)
+    ax.add_patch(circle)
+    ax.set_aspect('equal', adjustable='datalim')
+    
+    plt.xlim(-10, 10)
+    plt.ylim(-10, 10)
+    plt.gca().set_aspect('equal', adjustable='box')
+    plt.show()
+
+def add_point():
+    x = float(entry_x_point.get())
+    y = float(entry_y_point.get())
+    
+    plt.scatter(x, y, color='red')
+    plt.show()
+
+# Создание главного окна
+root = tk.Tk()
+root.title("Определение попадания точки в область")
+
+# Создание элементов интерфейса для проверки точки
+label_x = tk.Label(root, text="X:")
+label_x.pack()
+entry_x = tk.Entry(root)
+entry_x.pack()
+
+label_y = tk.Label(root, text="Y:")
+label_y.pack()
+entry_y = tk.Entry(root)
+entry_y.pack()
+
+check_button = tk.Button(root, text="Проверить точку", command=check_point)
+check_button.pack()
+
+result_label = tk.Label(root, text="", fg='black')
+result_label.pack()
+
+# Создание элементов интерфейса для добавления точек
+label_x_point = tk.Label(root, text="X точки:")
+label_x_point.pack()
+entry_x_point = tk.Entry(root)
+entry_x_point.pack()
+
+label_y_point = tk.Label(root, text="Y точки:")
+label_y_point.pack()
+entry_y_point = tk.Entry(root)
+entry_y_point.pack()
+
+add_button = tk.Button(root, text="Добавить точку", command=add_point)
+add_button.pack()
+
+# Кнопка для отображения фигуры
+draw_button = tk.Button(root, text="Отобразить круг", command=draw_figure)
+draw_button.pack()
+
+# Запуск главного цикла
+
 root.mainloop()
