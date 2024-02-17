@@ -1,0 +1,64 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from sympy import symbols, lambdify
+
+def bisection_method(f, a, b, tol=1e-6, max_iter=100):
+    iters = 0
+    root = None
+    while iters < max_iter:
+        c = (a + b) / 2
+        f_c = f(c)
+        
+        if abs(f_c) < tol:
+            root = c
+            break
+        
+        if f(a) * f_c < 0:
+            b = c
+        else:
+            a = c
+        
+        iters += 1
+    
+    return root, iters
+
+def step_by_step_bisection_method(equation, a, b):
+    x_sym = symbols('x')
+    f = lambdify(x_sym, equation)
+
+    x = np.linspace(a, b, 1000)
+    y = f(x)
+
+    fig, ax = plt.subplots()
+    ax.plot(x, y)
+    ax.axhline(y=0, color='k', linestyle='--')
+    ax.axvline(x=a, color='b', linestyle='--', label=f'a={a:.2f}')
+    ax.axvline(x=b, color='g', linestyle='--', label=f'b={b:.2f}')
+    ax.set_xlabel('x')
+    ax.set_ylabel('f(x)')
+    ax.set_title('Bisection Method Steps')
+
+    root, iterations = bisection_method(f, a, b)
+
+    def on_click(event):
+        nonlocal a, b
+        c = (a + b) / 2
+        ax.axvline(x=c, color='purple', linestyle='-.', label=f'Midpoint at x={c:.2f}')
+        if f(a) * f(c) < 0:
+            b = c
+            ax.axvline(x=b, color='g', linestyle='--', label=f'b={b:.2f}')
+        else:
+            a = c
+            ax.axvline(x=a, color='b', linestyle='--', label=f'a={a:.2f}')
+        
+        plt.legend()
+        plt.draw()
+
+    fig.canvas.mpl_connect('button_press_event', on_click)
+    plt.show()
+
+equation = input("Введите уравнение (используйте 'x' в качестве переменной): ")
+a = float(input("Введите начальное значение интервала (a): "))
+b = float(input("Введите конечное значение интервала (b): "))
+
+step_by_step_bisection_method(equation, a, b)
