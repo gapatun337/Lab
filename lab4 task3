@@ -1,0 +1,146 @@
+import tkinter as tk
+import pandas as pd
+import matplotlib.pyplot as plt
+from matplotlib.patches import Rectangle, Circle
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
+
+# Создаем DataFrame для хранения данных
+data = pd.DataFrame(columns=['Тип объекта', 'Широта', 'Долгота', 'Угол поворота', 'Ширина', 'Длина', 'Радиус'])
+fig, ax = plt.subplots()
+
+# Создаем окно
+root = tk.Tk()
+root.title("Карта объектов")
+
+# Функция для отображения объектов на карте вместе со сеткой
+def display_objects():
+    ax.clear()
+    ax.grid(True)
+
+    for idx, (_, row) in enumerate(data.iterrows()):
+        if row['Тип объекта'] == 'Участки':
+            # Рассчитываем координаты углов прямоугольника
+            x = row['Широта']
+            y = row['Долгота']
+            width = row['Ширина']
+            height = row['Длина']
+            angle = row['Угол поворота']
+
+            # Создаем прямоугольник
+            rectangle = Rectangle((x, y), width, height, angle=angle, ec='black', fc='none')
+            ax.add_patch(rectangle)
+        elif row['Тип объекта'] == 'Пожарные водоемы':
+            circle = Circle((row['Широта'], row['Долгота']), row['Радиус'], fill=False, label='Пожарный водоем', edgecolor='blue', linestyle='--')
+            ax.add_artist(circle)
+        elif row['Тип объекта'] == 'Насосные станции':
+            circle = Circle((row['Широта'], row['Долгота']), 0.05, fill=True, label='Насосная станция', color='red')
+            ax.add_artist(circle)
+
+    ax.legend()
+
+    canvas.draw()
+
+# Функция для обновления таблицы с новыми данными
+def update_table():
+    data_display.delete(0, tk.END)
+    for idx, (_, row) in enumerate(data.iterrows()):
+        data_display.insert(idx, f"{row['Тип объекта']} | Широта: {row['Широта']} | Долгота: {row['Долгота']} | "
+                                  f"Угол поворота: {row['Угол поворота']} | Ширина: {row['Ширина']} | Длина: {row['Длина']} | Радиус: {row['Радиус']}")
+
+    update_map()
+
+# Функция для добавления новых данных из формы
+def add_data():
+    new_type = type_var.get()
+    new_lat = float(lat_entry.get())
+    new_lon = float(lon_entry.get())
+    new_width = float(width_entry.get()) if new_type == 'Участки' else None
+    new_height = float(height_entry.get()) if new_type == 'Участки' else None
+    new_angle = float(angle_entry.get()) if new_type == 'Участки' else None
+    new_radius = float(radius_entry.get()) if new_type == 'Пожарные водоемы' else None
+    data.loc[len(data)] = [new_type, new_lat, new_lon, new_angle, new_width, new_height, new_radius]
+    update_table()
+
+# Функция для обновления карты после добавления новых данных
+def update_map():
+    display_objects()
+
+# Функция для масштабирования карты
+def scale_map():
+    min_lat = data['Широта'].min() - 10
+    max_lat = data['Широта'].max() + 10
+    min_lon = data['Долгота'].min() - 10
+    max_lon = data['Долгота'].max() + 10
+
+    ax.set_xlim(min_lat, max_lat)
+    ax.set_ylim(min_lon, max_lon)
+
+    canvas.draw()
+
+# Добавляем выпадающее меню
+types = ["Насосные станции", "Пожарные водоемы", "Участки", "Другие объекты"]
+type_var = tk.StringVar(root)
+type_var.set(types[0])
+type_menu = tk.OptionMenu(root, type_var, *types)
+type_menu.pack()
+
+# Добавляем поля ввода для координат
+lat_label = tk.Label(root, text="Широта:")
+lat_label.pack()
+lat_entry = tk.Entry(root)
+lat_entry.pack()
+
+lon_label = tk.Label(root, text="Долгота:")
+lon_label.pack()
+lon_entry = tk.Entry(root)
+lon_entry.pack()
+
+if 'Участки' in types:
+    width_label = tk.Label(root, text="Ширина:")
+    width_label.pack()
+    width_entry = tk.Entry(root)
+    width_entry.pack()
+
+    height_label = tk.Label(root, text="Длина:")
+    height_label.pack()
+    height_entry = tk.Entry(root)
+    height_entry.pack()
+
+    angle_label = tk.Label(root, text="Угол поворота:")
+    angle_label.pack()
+    angle_entry = tk.Entry(root)
+    angle_entry.pack()
+
+if 'Пожарные водоемы' in types:
+    radius_label = tk.Label(root, text="Радиус:")
+    radius_label.pack()
+    radius_entry = tk.Entry(root)
+    radius_entry.pack()
+
+# Кнопка для добавления новых данных
+add_button = tk.Button(root, text="Добавить данные", command=add_data)
+add_button.pack()
+
+# Создаем виджет списка для отображения данных
+data_display = tk.Listbox(root, width=120)
+data_display.pack()
+
+# Создаем виджет с картой
+canvas = FigureCanvasTkAgg(fig, master=root)
+canvas.get_tk_widget().pack()
+
+# Добавляем панель навигации
+toolbar = NavigationToolbar2Tk(canvas, root)
+toolbar.update()
+canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
+
+# Кнопка для отображения объектов на карте
+display_button = tk.Button(root, text="Отобразить объекты", command=update_map)
+display_button.pack()
+
+# Кнопка для масштабирования карты
+scale_button = tk.Button(root, text="Масштабировать карту", command=scale_map)
+scale_button.pack()
+
+# Запускаем главный цикл окна
+root.mainloop()
