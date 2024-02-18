@@ -44,6 +44,8 @@ def step_by_step_bisection_method(equation, a, b):
         nonlocal a, b
         c = (a + b) / 2
         ax.axvline(x=c, color='purple', linestyle='-.', label=f'Midpoint at x={c:.2f}')
+        ax.plot(c, f(c), 'ro')  # Добавляем точку в середине текущего интервала
+
         if f(a) * f(c) < 0:
             b = c
             ax.axvline(x=b, color='g', linestyle='--', label=f'b={b:.2f}')
@@ -53,6 +55,10 @@ def step_by_step_bisection_method(equation, a, b):
         
         plt.legend()
         plt.draw()
+
+        if root is not None:
+            print(f"Найденный корень: {root:.6f}")
+            print(f"Количество итераций: {iterations}")
 
     fig.canvas.mpl_connect('button_press_event', on_click)
     plt.show()

@@ -33,7 +33,7 @@ def display_objects():
             circle = Circle((row['Широта'], row['Долгота']), row['Радиус'], fill=False, label='Пожарный водоем', edgecolor='blue', linestyle='--')
             ax.add_artist(circle)
         elif row['Тип объекта'] == 'Насосные станции':
-            circle = Circle((row['Широта'], row['Долгота']), 0.05, fill=True, label='Насосная станция', color='red')
+            circle = Circle((row['Широта'], row['Долгота']), 0.1, fill=True, label='Насосная станция', color='red')
             ax.add_artist(circle)
 
     ax.legend()
