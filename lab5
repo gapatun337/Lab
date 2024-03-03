@@ -1,0 +1,167 @@
+import tkinter as tk
+from tkinter import ttk, messagebox
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from abc import ABC, abstractmethod
+
+class AbstractApproximationFunction(ABC):
+    @abstractmethod
+    def __init__(self):
+        pass
+
+    @abstractmethod
+    def approximate(self, x, y):
+        pass
+
+    @abstractmethod
+    def __call__(self, x):
+        pass
+
+    @abstractmethod
+    def __str__(self):
+        pass
+
+    @abstractmethod
+    def __repr__(self):
+        pass
+
+class LinearFunction(AbstractApproximationFunction):
+    def __init__(self):
+        self.coefficients = None
+
+    def approximate(self, x, y):
+        self.coefficients = np.polyfit(x, y, 1)
+
+    def __call__(self, x):
+        return np.polyval(self.coefficients, x)
+
+    def __str__(self):
+        return f'LinearFunction({self.coefficients[0]:.3f} + {self.coefficients[1]:.3f}x)'
+
+    def __repr__(self):
+        return f'LinearFunction({self.coefficients[0]}, {self.coefficients[1]})'
+
+class QuadraticFunction(AbstractApproximationFunction):
+    def __init__(self):
+        self.coefficients = None
+
+    def approximate(self, x, y):
+        self.coefficients = np.polyfit(x, y, 2)
+
+    def __call__(self, x):
+        return np.polyval(self.coefficients, x)
+
+    def __str__(self):
+        return f'QuadraticFunction({self.coefficients[0]:.3f} + {self.coefficients[1]:.3f}x + {self.coefficients[2]:.3f}x^2)'
+
+    def __repr__(self):
+        return f'QuadraticFunction({self.coefficients[0]}, {self.coefficients[1]}, {self.coefficients[2]})'
+
+class ApproximationApp:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Approximation App")
+
+        self.points = []  
+        self.selected_function = tk.StringVar()
+        self.selected_function.set("Линейная")
+
+        self.create_widgets()
+
+    def create_widgets(self):
+        self.plot_frame = ttk.Frame(self.root)
+        self.plot_frame.grid(row=0, column=0, rowspan=6, padx=10, pady=10)
+
+        self.table_frame = ttk.Frame(self.root)
+        self.table_frame.grid(row=0, column=1, padx=10, pady=10)
+
+        self.fig, self.ax = plt.subplots()
+        self.canvas = FigureCanvasTkAgg(self.fig, master=self.plot_frame)
+        self.canvas.get_tk_widget().pack()
+        self.plot_function()
+
+        self.x_label = ttk.Label(self.table_frame, text="X:")
+        self.x_label.grid(row=0, column=0, padx=5, pady=5, sticky="w")
+        self.x_entry = ttk.Entry(self.table_frame)
+        self.x_entry.grid(row=0, column=1, padx=5, pady=5)
+
+        self.y_label = ttk.Label(self.table_frame, text="Y:")
+        self.y_label.grid(row=1, column=0, padx=5, pady=5, sticky="w")
+        self.y_entry = ttk.Entry(self.table_frame)
+        self.y_entry.grid(row=1, column=1, padx=5, pady=5)
+
+        add_point_button = ttk.Button(self.table_frame, text="Добавить точку", command=self.add_point)
+        add_point_button.grid(row=2, column=0, columnspan=2, pady=5)
+
+        remove_point_button = ttk.Button(self.table_frame, text="Удалить точку", command=self.remove_point)
+        remove_point_button.grid(row=3, column=0, columnspan=2, pady=5)
+
+        functions = ["Линейная", "Квадратичная"]
+        function_menu = ttk.Combobox(self.table_frame, textvariable=self.selected_function, values=functions)
+        function_menu.grid(row=4, column=0, columnspan=2, pady=10, sticky="w")
+
+        calculate_button = ttk.Button(self.table_frame, text="Рассчитать", command=self.calculate_and_plot)
+        calculate_button.grid(row=5, column=0, columnspan=2, pady=10)
+
+        self.create_table()
+
+    def create_table(self):
+        columns = ["X", "Y"]
+        self.tree = ttk.Treeview(self.table_frame, columns=columns, show="headings")
+        for col in columns:
+            self.tree.heading(col, text=col)
+        self.tree.grid(row=0, column=2, rowspan=4)
+
+    def add_point(self):
+        try:
+            x = float(self.x_entry.get())
+            y = float(self.y_entry.get())
+            self.points.append((x, y))
+            self.plot_function()
+            self.update_table()
+        except ValueError:
+            messagebox.showerror("Ошибка", "Введите корректные значения X и Y.")
+
+    def remove_point(self):
+        if self.points:
+            self.points.pop()
+            self.plot_function()
+            self.update_table()
+
+    def update_table(self):
+        for i in self.tree.get_children():
+            self.tree.delete(i)
+        for point in self.points:
+            self.tree.insert("", "end", values=point)
+
+    def plot_function(self):
+        self.ax.clear()
+
+        if self.points:
+            x, y = zip(*self.points)
+            self.ax.scatter(x, y, label="Точки", color="blue")
+
+            selected_function = self.selected_function.get()
+
+            if selected_function == "Линейная":
+                function = LinearFunction()
+            elif selected_function == "Квадратичная":
+                function = QuadraticFunction()
+
+            function.approximate(x, y)
+            self.ax.plot(x, function(x), label=str(function), color="red")
+
+        self.ax.legend()
+        self.canvas.draw()
+
+    def calculate_and_plot(self):
+        if len(self.points) < 2:
+            messagebox.showerror("Ошибка", "Должно быть как минимум две точки для аппроксимации.")
+            return
+        self.plot_function()
+
+# Создаем и запускаем приложение
+root = tk.Tk()
+app = ApproximationApp(root)
+root.mainloop()
