@@ -65,3 +65,4 @@ class OptimizationApp:
 root = tk.Tk()
 app = OptimizationApp(root)
 root.mainloop()
+
